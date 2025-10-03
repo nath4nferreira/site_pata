@@ -163,6 +163,22 @@ a{
             max-width: -20px;
             max-height: 20px;
         }
+
+        .texto1{
+            margin: 40px 20px 40px 20px;
+            padding: 30px 20px;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: calc(100% - 40px);
+        }
+
+        .texto2{
+            margin: 40px 20px 40px 20px;
+            padding: 30px 20px;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: calc(100% - 40px);
+        }
     }
 
 .corpo{
@@ -186,6 +202,34 @@ p{
     background-color: #302c2f;
     
 }
+
+.texto1{
+    max-width: 800px;
+    width: 100%;
+    margin: 150px auto 80px 150px;
+    padding: 40px;
+    color: #fff;
+    font-size: 18px;
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+    text-align: justify;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.texto1 p{
+    margin-bottom: 24px;
+    text-indent: 2em;
+    font-weight: 400;
+}
+
+.texto1 p:last-child{
+    margin-bottom: 0;
+}
+
 
 #img1{
     display: flex;
@@ -226,10 +270,38 @@ p{
 }
 
 
+
 .apresentation{
     background-color: #d6c3b6;
     height: 1500px;  /* altura aumentada para baixo */
     position: relative;  /* contexto de posicionamento para bubble e bubble1 */
+}
+
+.texto2{
+    max-width: 800px;
+    width: 100%;
+    margin: 150px auto 80px 520px;
+    padding: 40px;
+    color: #302c2f;
+    font-size: 18px;
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+    text-align: justify;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(48, 44, 47, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.texto2 p{
+    margin-bottom: 24px;
+    text-indent: 2em;
+    font-weight: 400;
+}
+
+.texto2 p:last-child{
+    margin-bottom: 0;
 }
 
 #img2{
