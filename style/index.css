@@ -1,552 +1,975 @@
 @charset "UTF-8";
 
+/* ===================================
+   IMPORTS & FONTS
+   =================================== */
+/* Importa a fonte Poppins do Google Fonts com diferentes pesos
+   Display=swap melhora a performance de carregamento da fonte */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+/* ===================================
+   CSS VARIABLES (Custom Properties)
+   =================================== */
+/* Centraliza todas as variáveis do projeto para facilitar manutenção
+   Permite mudanças globais alterando apenas um valor */
+:root {
+    /* === PALETA DE CORES === */
+    /* Cores principais do tema */
+    --color-primary: #302c2f;        /* Cor escura da seção inicial */
+    --color-secondary: #d6c3b6;      /* Cor clara da seção de apresentação */
+    --color-accent: #ab9586;         /* Cor de destaque das bolhas */
+    --color-footer-bg: #402918;      /* Cor de fundo do footer */
+    --color-text-light: #fff;        /* Texto claro */
+    --color-text-dark: #302c2f;      /* Texto escuro */
+    --color-highlight: #ff6b6b;      /* Cor de hover e destaque */
+    --color-selection: #904cbe;      /* Cor da seleção de texto */
+    
+    /* === VARIÁVEIS DO LIQUID GLASS === */
+    /* Controlam o efeito de vidro líquido nos textos (mobile/tablet) */
+    --lgx: 50%;                      /* Posição X do gradiente */
+    --lgy: 50%;                      /* Posição Y do gradiente */
+    --lg-brightness: 1;              /* Intensidade do brilho */
+    
+    /* === SISTEMA DE ESPAÇAMENTO === */
+    /* Escala consistente de espaçamentos */
+    --spacing-xs: 0.5rem;    /* 8px */
+    --spacing-sm: 1rem;      /* 16px */
+    --spacing-md: 1.5rem;    /* 24px */
+    --spacing-lg: 2rem;      /* 32px */
+    --spacing-xl: 3rem;      /* 48px */
+    --spacing-xxl: 5rem;     /* 80px */
+    
+    /* === BORDER RADIUS === */
+    /* Raios de borda padronizados */
+    --border-radius-sm: 8px;     /* Pequeno */
+    --border-radius-md: 20px;    /* Médio - usado nos textos */
+    --border-radius-lg: 500px;   /* Grande - usado nas bolhas (circular) */
+    
+    /* === TRANSIÇÕES === */
+    /* Durações padronizadas para animações */
+    --transition-fast: 0.3s ease;      /* Rápida - hover simples */
+    --transition-normal: 0.5s ease;    /* Normal - hover complexo */
+    --transition-slow: 0.8s ease-out;  /* Lenta - animações de entrada */
+    
+    /* === Z-INDEX SYSTEM === */
+    /* Sistema organizado de camadas para evitar conflitos */
+    --z-background: 1;      /* Fundo do footer */
+    --z-bubbles: 5;         /* Bolhas decorativas */
+    --z-content: 10;        /* Conteúdo principal (imagens) */
+    --z-waves: 1001;        /* Ondas do footer */
+    --z-ui: 1005;           /* Elementos de interface */
+    --z-titles: 1006;       /* Títulos (maior prioridade) */
 }
 
-body{
-    text-decoration: none;  
-    min-height: 100vh;
-    background: #d6c3b6;
+/* ===================================
+   RESET & BASE STYLES
+   =================================== */
+/* Reset CSS - Remove estilos padrão do navegador para consistência */
+* {
+    margin: 0;                          /* Remove margem padrão */
+    padding: 0;                         /* Remove padding padrão */
+    box-sizing: border-box;             /* Inclui border e padding no cálculo do tamanho */
+    font-family: 'Poppins', sans-serif; /* Define fonte padrão para todos os elementos */
 }
 
-a{
+/* Configurações base do body */
+body {
+    text-decoration: none;              /* Remove decoração de texto */
+    min-height: 100vh;                  /* Altura mínima de 100% da viewport */
+    background: var(--color-secondary); /* Cor de fundo padrão */
+    scroll-behavior: smooth;            /* Rolagem suave para âncoras */
+    opacity: 1 !important;             /* Garante visibilidade (override para animações) */
+}
+
+/* Remove decoração de links */
+a {
     text-decoration: none;
 }
 
-/*cor do menu de navegação aqui em cima*/
-/* header{
-    background-color: #AE91EC;
-    padding-inline: 16px;
-} */
-
-/*navegação*/
-/* nav{
-    max-width: 1380px;
-    height: 70px;
-    margin-inline: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-} */
-
-::selection{
-    background-color: #904cbe;
-    color: #fff;
+/* Alinhamento padrão de parágrafos */
+p {
+    text-align: justify;                /* Texto justificado para melhor leitura */
 }
 
-/*configuração de navegação futura*/
-/* .nav-list{
-    display: flex;
-    gap: 32px;
-    list-style: none;
-
+/* Personaliza a seleção de texto */
+::selection {
+    background-color: var(--color-selection); /* Cor de fundo da seleção */
+    color: var(--color-text-light);           /* Cor do texto selecionado */
 }
 
-.nav-list a{
-    font-size: 18px;
-    color: #fff;
-    padding-block: 16px;
+/* ===================================
+   LAYOUT SECTIONS
+   =================================== */
+/* Seção inicial - fundo escuro com título e texto principal */
+.inicio {
+    position: relative;                     /* Para posicionamento de elementos filhos absolutos */
+    width: 100%;                           /* Largura total */
+    min-height: 100vh;                     /* Altura mínima de uma tela completa */
+    background-color: var(--color-primary); /* Fundo escuro */
+    display: flex;                         /* Layout flexível */
+    flex-direction: column;                /* Itens em coluna */
+    justify-content: center;               /* Centraliza verticalmente */
+    align-items: flex-start;               /* Alinha à esquerda */
+    padding: 60px 80px;                    /* Espaçamento interno */
+    overflow: hidden;                      /* Esconde elementos que saem da área */
 }
 
-.hero{
-    height: calc(100vh - 70px);
-    background: center / cover no-repeat;
+/* Seção de apresentação - fundo claro com segundo texto */
+.apresentation {
+    background-color: var(--color-secondary); /* Fundo claro */
+    position: relative;                       /* Para posicionamento de bolhas */
+    min-height: 100vh;                        /* Altura mínima de uma tela completa */
+    display: flex;                           /* Layout flexível */
+    flex-direction: column;                  /* Itens em coluna */
+    justify-content: center;                 /* Centraliza verticalmente */
+    align-items: center;                     /* Centraliza horizontalmente */
+    padding: 80px;                          /* Espaçamento interno */
 }
 
-.hamburguer{
-    display: none;
-    border: none;
-    background: none;
-    border-top: 3px solid #fff;
-    cursor: pointer;
+/* ===================================
+   TYPOGRAPHY
+   =================================== */
+/* Título principal com efeito de brilho animado */
+.t1 {
+    text-align: center;                           /* Centralizado */
+    color: aliceblue;                            /* Cor clara */
+    font-size: 2.5rem;                           /* Tamanho grande */
+    font-weight: 700;                            /* Peso bold */
+    margin-bottom: var(--spacing-lg);            /* Margem inferior */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para legibilidade */
+    animation: titleGlow 3s ease-in-out infinite alternate; /* Animação de brilho */
 }
 
-.hamburguer::before,
-.hamburguer::after{
-    content:" ";
-    display: block;
-    width: 30px;
-    height: 3px;
-    background: #fff;
-    margin-top: 5px;
-    position: relative;
-    transition: 0.3s;
-} */
+/* Título da seção inicial (esquerda) */
+.tl1 {
+    color: aliceblue;                                      /* Cor clara para contraste */
+    font-size: clamp(1.6rem, 2.5vw + 1rem, 2.6rem);       /* Tamanho responsivo */
+    font-weight: 700;                                      /* Peso bold */
+    text-align: left;                                      /* Alinhado à esquerda */
+    margin: 0 0 40px 0;                                    /* Margem apenas embaixo */
+    position: relative;                                    /* Para z-index */
+    z-index: var(--z-titles);                             /* Camada superior */
+    transition: color var(--transition-fast), text-shadow var(--transition-fast); /* Transição suave */
+    order: 1;                                              /* Ordem no flexbox */
+}
 
-/*responsividade mobile*/
-    @media(max-width: 768px) {
-        .hamburguer{
-            display: block;
-            z-index: 3;
-        }
+/* Título da seção de apresentação (centralizado) */
+.tl2 {
+    color: var(--color-text-dark);                        /* Cor escura para contraste */
+    font-size: clamp(1.4rem, 2vw + 0.8rem, 2.2rem);       /* Tamanho responsivo */
+    font-weight: 700;                                      /* Peso bold */
+    text-align: center;                                    /* Centralizado */
+    position: relative;                                    /* Para z-index */
+    margin: 0 auto 40px auto;                              /* Centralizado com margem */
+    max-width: 800px;                                      /* Largura máxima */
+    z-index: var(--z-ui);                                  /* Camada de interface */
+    pointer-events: auto;                                  /* Permite interação */
+    transition: color var(--transition-fast), text-shadow var(--transition-fast); /* Transição suave */
+    order: 1;                                              /* Ordem no flexbox */
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.15);             /* Sombra sutil para legibilidade */
+}
 
-        .nav-list{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #AE91EC;
-            z-index: 2;
-            clip-path: circle(100px at 90% -50%);
-            transition: 1s ease-out;
+/* === EFEITOS DE HOVER NOS TÍTULOS === */
+/* Efeito de brilho no hover do título da seção inicial */
+.tl1:hover {
+    text-shadow: 
+        0 0 6px rgba(255, 255, 255, 0.6),      /* Brilho interno */
+        0 0 14px rgba(255, 255, 255, 0.4),     /* Brilho médio */
+        0 0 22px rgba(171, 149, 134, 0.35);    /* Brilho externo com cor do tema */
+}
 
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            gap: 0;
-            pointer-events: none;
-        }
+/* Efeito de brilho no hover do título da seção de apresentação */
+.tl2:hover {
+    text-shadow: 
+        0 0 10px rgba(171, 149, 134, 0.9),     /* Brilho interno forte */
+        0 0 22px rgba(171, 149, 134, 0.75),    /* Brilho médio */
+        0 0 36px rgba(87, 69, 57, 0.55),       /* Brilho externo */
+        0 0 48px rgba(83, 62, 48, 0.45) !important; /* Brilho mais externo */
+}
 
-        .nav-list a{
-            font-size: 24px;
-            opacity: 0;
-        }
+/* ===================================
+   TEXT CONTENT BLOCKS (Blocos de Texto)
+   =================================== */
+/* Bloco de texto da seção inicial - estilo "glass morphism" */
+.texto1 {
+    max-width: 800px;                                      /* Largura máxima para legibilidade */
+    width: min(100%, 800px);                               /* Responsivo até 800px */
+    margin: 40px 0;                                        /* Margem vertical */
+    padding: 40px;                                         /* Espaçamento interno generoso */
+    color: var(--color-text-light);                       /* Texto claro */
+    font-size: 18px;                                       /* Tamanho de fonte legível */
+    line-height: 1.8;                                      /* Altura da linha para boa leitura */
+    letter-spacing: 0.5px;                                 /* Espaçamento entre letras */
+    text-align: justify;                                   /* Texto justificado */
+    background: rgba(255, 255, 255, 0.05);                /* Fundo semi-transparente */
+    border-radius: var(--border-radius-md);               /* Bordas arredondadas */
+    backdrop-filter: blur(10px);                          /* Efeito de desfoque no fundo */
+    border: 1px solid rgba(255, 255, 255, 0.1);           /* Borda sutil */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);            /* Sombra para profundidade */
+    order: 3;                                              /* Ordem no flexbox */
+    align-self: flex-start;                                /* Alinhamento próprio */
+    transition: all var(--transition-fast);               /* Transição suave para hover */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);           /* Sombra no texto para legibilidade */
+}
 
-        .nav-list li:nth-child(1) a {
-            transition: 0.5s 0.2s;
-        }
+/* Bloco de texto da seção de apresentação - estilo similar mas cores diferentes */
+.texto2 {
+    max-width: 800px;                                      /* Largura máxima */
+    width: min(100%, 800px);                               /* Responsivo */
+    margin: 40px auto;                                     /* Margem com centralização */
+    padding: 40px;                                         /* Espaçamento interno */
+    color: var(--color-text-dark);                        /* Texto escuro para contraste */
+    font-size: 18px;                                       /* Tamanho de fonte */
+    line-height: 1.8;                                      /* Altura da linha */
+    letter-spacing: 0.5px;                                 /* Espaçamento entre letras */
+    text-align: justify;                                   /* Texto justificado */
+    background: rgba(255, 255, 255, 0.1);                 /* Fundo semi-transparente */
+    border-radius: var(--border-radius-md);               /* Bordas arredondadas */
+    backdrop-filter: blur(10px);                          /* Efeito de desfoque */
+    border: 1px solid rgba(48, 44, 47, 0.2);              /* Borda com cor do tema */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);            /* Sombra */
+    order: 3;                                              /* Ordem no flexbox */
+    transition: all var(--transition-fast);               /* Transição suave */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);           /* Sombra no texto */
+}
 
-        .nav-list li:nth-child(2) a {
-            transition: 0.5s 0.4s;
-        } 
-        
-        .nav-list li:nth-child(3) a {
-            transition: 0.5s 0.6s;
-        }
+/* === FORMATAÇÃO DOS PARÁGRAFOS === */
+/* Parágrafos dentro dos blocos de texto */
+.texto1 p,
+.texto2 p {
+    margin-bottom: 24px;                                   /* Espaçamento entre parágrafos */
+    text-indent: 2em;                                      /* Recuo da primeira linha */
+    font-weight: 400;                                      /* Peso normal da fonte */
+}
 
-        /*Estilos ativos*/
+/* Remove margem do último parágrafo para evitar espaço extra */
+.texto1 p:last-child,
+.texto2 p:last-child {
+    margin-bottom: 0;
+}
 
-        .nav.active .nav-list{
-            clip-path: circle(1500px at 90% -15%);
-            pointer-events: all;
-        }
+/* === EFEITOS DE HOVER NOS BLOCOS DE TEXTO === */
+/* Efeito de elevação no hover dos blocos de texto */
+.texto1:hover,
+.texto2:hover {
+    transform: translateY(-5px);                           /* Move para cima */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);          /* Sombra mais intensa */
+}
 
-        .nav.active .nav-list a {
-            opacity: 1;
-        }
+/* ===================================
+   IMAGES (Imagens)
+   =================================== */
+/* Posicionamento da imagem principal (img1) */
+#img1 {
+    position: absolute !important;                         /* Posicionamento absoluto forçado */
+    top: 10% !important;                                   /* 10% do topo da seção */
+    right: -40px !important;                               /* Sai 40px para fora da direita */
+    z-index: var(--z-content);                            /* Camada de conteúdo */
+    order: 2;                                              /* Ordem no flexbox */
+}
 
-        .nav.active .hamburguer{
-            position: fixed;
-            top: 26px;
-            right: 16px;
-            border-top-color: transparent;
-        }
+/* Estilização da imagem da pata */
+.img-pata {
+    width: clamp(220px, 25vw + 100px, 520px);             /* Tamanho responsivo */
+    height: auto;                                          /* Altura automática para manter proporção */
+    margin: 0;                                             /* Remove margem */
+    display: block;                                        /* Display em bloco */
+    transition: all var(--transition-normal);             /* Transição para efeitos */
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));  /* Sombra projetada */
+    aspect-ratio: 1;                                       /* Proporção 1:1 para evitar layout shift */
+    object-fit: contain;                                   /* Mantém proporção dentro do container */
+}
 
-        .nav.active .hamburguer::before{
-            transform: rotate(135deg);
-        }
+/* Efeito de hover na imagem */
+.img-pata:hover {
+    transform: scale(1.05) rotate(2deg);                  /* Aumenta e rotaciona levemente */
+    filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.3));  /* Sombra mais intensa */
+}
 
-        .nav.active .hamburguer::after{
-            transform: rotate(-135deg);
-            top: -7px;
-        }
+/* ===================================
+   BUBBLE ELEMENTS (Elementos Bolha)
+   =================================== */
+/* Configuração base para todas as bolhas com borda */
+#bubble-line1,
+#bubble-line2,
+#bubble-line3 {
+    border-radius: var(--border-radius-lg);               /* Bordas circulares */
+    transition: all var(--transition-normal);             /* Transição suave para hover */
+}
 
-        .elemento{
-            width: 90%;
-        }
+/* === BOLHAS DO LADO DIREITO === */
+/* Primeira bolha (topo direito) - apenas borda */
+#bubble-line1 {
+    position: absolute;                                    /* Posicionamento absoluto */
+    border: 4px solid var(--color-accent);                /* Borda com cor do tema */
+    width: clamp(220px, 18vw, 330px);                     /* Largura responsiva */
+    height: clamp(380px, 40vw, 700px);                    /* Altura responsiva (mais alta) */
+    right: clamp(8px, 2vw, 30px);                         /* Distância da direita */
+    top: -290px;                                           /* Posição negativa (sai para cima) */
+}
 
-        #footer_content {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
+/* Segunda bolha (meio direito) - apenas borda */
+#bubble-line2 {
+    position: absolute;                                    /* Posicionamento absoluto */
+    border: 4px solid var(--color-accent);                /* Borda com cor do tema */
+    width: clamp(220px, 18vw, 330px);                     /* Largura responsiva */
+    height: clamp(320px, 32vw, 550px);                    /* Altura responsiva */
+    right: clamp(8px, 2vw, 28px);                         /* Distância da direita */
+    top: 420px;                                            /* Posição do meio */
+}
 
-        }
+/* Terceira bolha (baixo direito) - preenchida */
+#bubble-line3 {
+    position: absolute;                                    /* Posicionamento absoluto */
+    width: clamp(220px, 18vw, 330px);                     /* Largura responsiva */
+    height: clamp(320px, 32vw, 550px);                    /* Altura responsiva */
+    right: clamp(8px, 2vw, 28px);                         /* Distância da direita */
+    top: 750px;                                            /* Posição inferior */
+    background-color: rgba(171, 149, 134, 0.2);           /* Preenchimento semi-transparente */
+    border-radius: var(--border-radius-lg);               /* Bordas circulares */
+}
 
-        #footer_contacts img{
-            display: flex;
-            max-width: -20px;
-            max-height: 20px;
-        }
+/* === BOLHAS DO LADO ESQUERDO === */
+/* Primeira bolha esquerda (meio) - com borda */
+#bubble {
+    border: 4px solid var(--color-accent);                /* Borda com cor do tema */
+    border-radius: var(--border-radius-lg);               /* Bordas circulares */
+    position: absolute;                                    /* Posicionamento absoluto */
+    width: clamp(220px, 18vw, 330px);                     /* Largura responsiva */
+    height: clamp(320px, 32vw, 550px);                    /* Altura responsiva */
+    left: clamp(8px, 2vw, 28px);                          /* Distância da esquerda */
+    top: 400px;                                            /* Posição do meio */
+    transition: all var(--transition-normal);             /* Transição para hover */
+}
 
-        .texto1{
-            margin: 40px 20px 40px 20px;
-            padding: 30px 20px;
-            font-size: 16px;
-            line-height: 1.6;
-            max-width: calc(100% - 40px);
-        }
+/* Segunda bolha esquerda (baixo) - preenchida */
+#bubble1 {
+    background-color: rgba(171, 149, 134, 0.2);           /* Preenchimento semi-transparente */
+    border-radius: var(--border-radius-lg);               /* Bordas circulares */
+    position: absolute;                                    /* Posicionamento absoluto */
+    width: clamp(220px, 18vw, 330px);                     /* Largura responsiva */
+    height: clamp(320px, 32vw, 550px);                    /* Altura responsiva */
+    left: clamp(8px, 2vw, 28px);                          /* Distância da esquerda */
+    top: 720px;                                            /* Posição inferior */
+    transition: all var(--transition-normal);             /* Transição para hover */
+}
 
-        .texto2{
-            margin: 40px 20px 40px 20px;
-            padding: 30px 20px;
-            font-size: 16px;
-            line-height: 1.6;
-            max-width: calc(100% - 40px);
-        }
+/* === EFEITOS DE HOVER NAS BOLHAS === */
+/* Efeito de escala e brilho no hover de todas as bolhas */
+#bubble-line1:hover,
+#bubble-line2:hover,
+#bubble-line3:hover,
+#bubble:hover,
+#bubble1:hover {
+    transform: scale(1.02);                                /* Aumenta ligeiramente */
+    box-shadow: 0 0 20px rgba(171, 149, 134, 0.3);       /* Brilho com cor do tema */
+}
+
+/* ===================================
+   LIQUID GLASS EFFECT (Efeito Vidro Líquido)
+   =================================== */
+/* FUNCIONALIDADE ESPECIAL: Efeito de vidro líquido nos blocos de texto
+   Ativo apenas em telas ≤ 1024px (mobile e tablet)
+   Cria um overlay brilhante que segue o movimento do mouse/toque */
+@media (max-width: 1024px) {
+    .texto1::before,
+    .texto2::before {
+        content: '';                                           /* Pseudo-elemento vazio */
+        position: absolute;                                    /* Posicionamento absoluto */
+        inset: -10%;                                          /* Expande 10% além das bordas */
+        border-radius: inherit;                               /* Herda o border-radius do pai */
+        background: radial-gradient(                          /* Gradiente radial dinâmico */
+            300px 300px at var(--lgx) var(--lgy),            /* Tamanho e posição controlados por CSS vars */
+            rgba(255, 255, 255, calc(0.20 * var(--lg-brightness))) 0%,    /* Centro brilhante */
+            rgba(255, 255, 255, calc(0.10 * var(--lg-brightness))) 20%,   /* Meio transparente */
+            rgba(255, 255, 255, 0.0) 60%                     /* Borda totalmente transparente */
+        );
+        filter: saturate(120%) blur(6px);                     /* Saturação e desfoque para suavidade */
+        mix-blend-mode: screen;                               /* Modo de mistura para efeito de luz */
+        pointer-events: none;                                 /* Não interfere com cliques */
+        transition: opacity 0.2s ease;                       /* Transição suave de opacidade */
     }
+    
+    /* NOTA: As variáveis --lgx, --lgy e --lg-brightness são controladas via JavaScript
+       para criar o efeito de movimento seguindo o cursor/toque */
+}
 
-.corpo{
+/* ===================================
+   FOOTER SECTION (Seção do Rodapé)
+   =================================== */
+/* Container principal do footer */
+footer {
+    position: relative;                    /* Para posicionamento de elementos filhos */
+    width: 100%;                          /* Largura total */
+    background: transparent;              /* Fundo transparente (cor vem do ::before) */
+    min-height: 50vh;                     /* Altura mínima de meia tela */
+    padding: 20px 50px;                   /* Espaçamento interno */
+    display: flex;                        /* Layout flexível */
+    justify-content: center;              /* Centraliza horizontalmente */
+    align-items: center;                  /* Centraliza verticalmente */
+    flex-direction: column;               /* Itens em coluna */
+}
+
+/* FUNCIONALIDADE ESPECIAL: Fundo do footer que se adapta à altura da tela
+   Garante que não haja espaços vazios em telas grandes */
+footer::before {
+    content: '';                          /* Pseudo-elemento vazio */
+    position: absolute;                   /* Posicionamento absoluto */
+    top: 101px;                          /* Inicia após as ondas (100px + 1px) */
+    left: 0;                             /* Alinhado à esquerda */
+    width: 100%;                         /* Largura total */
+    height: calc(100vh - 101px);         /* Altura dinâmica: tela total - espaço das ondas */
+    min-height: 200px;                   /* Altura mínima para telas pequenas */
+    background: var(--color-footer-bg);  /* Cor de fundo do footer */
+    z-index: var(--z-background);        /* Camada de fundo */
+}
+
+/* === ÍCONES SOCIAIS E MENU === */
+/* Container dos ícones sociais e menu */
+footer .social_icon,
+footer .menu {
+    position: relative;                   /* Para z-index */
+    display: flex;                        /* Layout flexível */
+    justify-content: center;              /* Centraliza horizontalmente */
+    align-items: center;                  /* Centraliza verticalmente */
+    max-width: 10px 0;                   /* Largura máxima (valor parece incorreto - possível bug) */
+    z-index: var(--z-ui);                /* Camada de interface */
+}
+
+/* Remove marcadores das listas */
+footer .social_icon li,
+footer .menu li {
+    list-style: none;
+}
+
+/* Estilização dos links dos ícones sociais */
+footer .social_icon li a {
+    font-size: 2em;                      /* Tamanho grande para ícones */
+    color: var(--color-text-light);      /* Cor clara */
+    margin: 0 10px;                      /* Espaçamento horizontal */
+    display: inline-block;               /* Display inline-block */
+    transition: all var(--transition-normal); /* Transição suave */
+    transform: translateY(0);            /* Posição inicial para animação */
+}
+
+/* Efeito hover nos ícones sociais - movimento e mudança de cor */
+footer .social_icon li a:hover {
+    transform: translateY(-15px) scale(1.2);              /* Move para cima e aumenta */
+    color: var(--color-highlight);                        /* Muda para cor de destaque */
+    text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);     /* Adiciona brilho */
+}
+
+/* Estilização dos links do menu */
+footer .menu li a {
+    font-size: 1.2em;                    /* Tamanho médio */
+    color: var(--color-text-light);      /* Cor clara */
+    margin: 0 10px;                      /* Espaçamento horizontal */
+    display: inline-block;               /* Display inline-block */
+    opacity: 0.75;                       /* Transparência inicial */
+    transition: all var(--transition-fast); /* Transição rápida */
+    position: relative;                  /* Para pseudo-elemento ::after */
+}
+
+/* Efeito hover nos links do menu */
+footer .menu li a:hover {
+    opacity: 1;                          /* Remove transparência */
+    color: var(--color-highlight);       /* Muda para cor de destaque */
+    transform: translateY(-2px);         /* Move ligeiramente para cima */
+}
+
+/* Linha animada que aparece no hover dos links do menu */
+footer .menu li a::after {
+    content: '';                         /* Pseudo-elemento vazio */
+    position: absolute;                  /* Posicionamento absoluto */
+    width: 0;                           /* Largura inicial zero */
+    height: 2px;                        /* Altura da linha */
+    bottom: -5px;                       /* Posição abaixo do texto */
+    left: 50%;                          /* Inicia no centro */
+    background: var(--color-highlight); /* Cor da linha */
+    transition: all var(--transition-fast); /* Transição suave */
+}
+
+/* Animação da linha no hover - expande do centro para as bordas */
+footer .menu li a:hover::after {
+    width: 100%;                        /* Expande para largura total */
+    left: 0;                           /* Alinha à esquerda */
+}
+
+/* Texto do footer */
+footer p {
+    color: var(--color-text-light);     /* Cor clara */
+    text-align: center;                 /* Centralizado */
+    margin-top: 15px;                   /* Margem superior */
+    margin-bottom: 10px;                /* Margem inferior */
+    font-size: 1.1em;                   /* Tamanho ligeiramente maior */
+    position: relative;                 /* Para z-index */
+    z-index: var(--z-ui);               /* Camada de interface */
+}
+
+/* ===================================
+   WAVE ANIMATIONS (Animações das Ondas)
+   =================================== */
+/* FUNCIONALIDADE ESPECIAL: Sistema de ondas animadas no footer
+   Múltiplas camadas de ondas com movimento contínuo */
+footer .wave {
+    position: absolute;                   /* Posicionamento absoluto */
+    top: 1px;                            /* 1px do topo do footer */
+    left: 0;                             /* Alinhado à esquerda */
+    width: 100%;                         /* Largura total */
+    height: 100px;                       /* Altura fixa das ondas */
+    background: url(../images/waves.png); /* Imagem das ondas */
+    background-size: 1000px 100px;       /* Tamanho do background */
+    animation-duration: 3s;              /* Duração da animação */
+    animation-timing-function: ease-in-out; /* Função de timing suave */
+    animation-iteration-count: infinite;  /* Animação infinita */
+}
+
+/* === CAMADAS INDIVIDUAIS DAS ONDAS === */
+/* Cada onda tem opacidade, posição e direção diferentes para criar profundidade */
+
+/* Primeira onda - mais visível, movimento da direita para esquerda */
+footer .wave#wave1 {
+    z-index: var(--z-waves);            /* Camada base das ondas */
+    opacity: 1;                          /* Totalmente opaca */
+    bottom: 0;                           /* Na base do footer */
+    animation: animateWave 4s linear infinite; /* Animação específica */
+}
+
+/* Segunda onda - semi-transparente, movimento oposto */
+footer .wave#wave2 {
+    z-index: calc(var(--z-waves) + 1);  /* Uma camada acima */
+    opacity: 0.5;                        /* Semi-transparente */
+    bottom: 10px;                        /* 10px acima da base */
+    animation: animateWave_02 4s linear infinite; /* Animação reversa */
+}
+
+/* Terceira onda - mais transparente, movimento igual à primeira */
+footer .wave#wave3 {
+    z-index: calc(var(--z-waves) + 2);  /* Duas camadas acima */
+    opacity: 0.2;                        /* Bem transparente */
+    bottom: 15px;                        /* 15px acima da base */
+    animation: animateWave 3s linear infinite; /* Animação mais rápida */
+}
+
+/* Quarta onda - transparência média, movimento oposto */
+footer .wave#wave4 {
+    z-index: calc(var(--z-waves) + 3);  /* Camada superior */
+    opacity: 0.7;                        /* Transparência média */
+    bottom: 20px;                        /* 20px acima da base */
+    animation: animateWave_02 3s linear infinite; /* Animação reversa rápida */
+}
+
+/* === KEYFRAMES DAS ANIMAÇÕES === */
+/* Movimento da direita para esquerda */
+@keyframes animateWave {
+    0% { background-position-x: 1000px; }    /* Inicia na direita */
+    100% { background-position: 0px; }       /* Termina na esquerda */
+}
+
+/* Movimento da esquerda para direita (reverso) */
+@keyframes animateWave_02 {
+    0% { background-position-x: 0px; }       /* Inicia na esquerda */
+    100% { background-position: 1000px; }    /* Termina na direita */
+}
+
+/* Animação de brilho pulsante para o título principal */
+@keyframes titleGlow {
+    from {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+    to {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* ===================================
+   SCROLL ANIMATIONS
+   =================================== */
+.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all var(--transition-slow);
+}
+
+.fade-in:not(.visible) {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.slide-in-left {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all var(--transition-slow);
+}
+
+.slide-in-left:not(.visible) {
+    opacity: 0;
+    transform: translateX(-50px);
+}
+
+.slide-in-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.slide-in-right {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all var(--transition-slow);
+}
+
+.slide-in-right:not(.visible) {
+    opacity: 0;
+    transform: translateX(50px);
+}
+
+.slide-in-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.scale-in {
+    opacity: 1;
+    transform: scale(1);
+    transition: all var(--transition-slow);
+}
+
+.scale-in:not(.visible) {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.scale-in.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* JavaScript-enabled animations */
+.js-enabled .fade-in:not(.visible) {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.js-enabled .slide-in-left:not(.visible) {
+    opacity: 0;
+    transform: translateX(-50px);
+}
+
+.js-enabled .slide-in-right:not(.visible) {
+    opacity: 0;
+    transform: translateX(50px);
+}
+
+.js-enabled .scale-in:not(.visible) {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
+
+/* Mobile Small (≤390px) */
+@media (max-width: 390px) {
+    .tl1 {
+        margin-top: 32px;
+        margin-left: 12px;
+        font-size: clamp(1.1rem, 5.2vw, 1.5rem);
+    }
+    
+    .tl2 {
+        position: static;
+        display: block;
+        text-align: right;
+        margin: 12px 12px 0 auto;
+        right: auto;
+        top: auto;
+        font-size: clamp(1.1rem, 4.8vw, 1.4rem);
+    }
+    
+    .img-pata {
+        width: clamp(160px, 50vw, 280px);
+    }
+    
+    .texto1,
+    .texto2 {
+        width: 92vw;
+        max-width: none;
+        margin: 12px auto;
+        padding: 12px;
+        font-size: 14px;
+        line-height: 1.6;
+        box-sizing: border-box;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+    
+    .texto2 {
+        margin-bottom: 44px;
+    }
+    
+    .inicio,
+    .apresentation {
+        transform: none !important;
+    }
+    
+    footer::before {
+        min-height: 180px;
+    }
+}
+
+/* Mobile General (≤480px) */
+@media (max-width: 480px) {
+    .inicio {
+        min-height: auto;
+        padding-bottom: 28px;
+    }
+    
+    .apresentation {
+        margin-top: 28px;
+        padding-bottom: 48px;
+    }
+    
+    /* Hide bubbles on mobile for better focus */
+    #bubble-line1,
+    #bubble-line2,
+    #bubble-line3,
+    #bubble,
+    #bubble1 {
+        display: none;
+    }
+    
+    .tl1 {
+        margin-top: 28px;
+        margin-left: 14px;
+        font-size: clamp(1.2rem, 4.8vw, 1.6rem);
+    }
+    
+    .tl2 {
+        position: static;
+        display: block;
+        text-align: right;
+        margin: 10px 14px 0 auto;
+        right: auto;
+        top: auto;
+        font-size: clamp(1.15rem, 4.6vw, 1.5rem);
+    }
+    
+    .img-pata {
+        width: clamp(170px, 52vw, 300px);
+    }
+    
+    .texto1,
+    .texto2 {
+        width: 92vw;
+        max-width: none;
+        margin: 16px auto;
+        padding: 14px;
+        font-size: 14.5px;
+        line-height: 1.7;
+        box-sizing: border-box;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+    
+    .texto2 {
+        margin-bottom: 48px;
+    }
+    
+    footer::before {
+        min-height: 190px;
+    }
+}
+
+/* Tablet (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .inicio {
+        padding: 60px;
+        align-items: center;
+    }
+    
+    .apresentation {
+        padding: 80px 60px;
+    }
+    
+    .tl1 {
+        text-align: center;
+        align-self: center;
+        margin-bottom: 50px;
+        margin-left: clamp(24px, 5vw, 80px);
+        font-size: clamp(1.6rem, 2vw, 2.2rem);
+    }
+    
+    .tl2 {
+        margin-bottom: 50px;
+        top: 120px;
+        right: clamp(24px, 5vw, 64px);
+        font-size: clamp(1.3rem, 1.6vw, 1.9rem);
+    }
+    
+    .texto1 {
+        align-self: center;
+        margin: 30px auto;
+        margin-left: clamp(24px, 6vw, 120px);
+        padding: 28px;
+        font-size: 16.5px;
+    }
+    
+    .texto2 {
+        margin: 30px auto;
+        margin-right: clamp(24px, 6vw, 120px);
+        padding: 28px;
+        font-size: 16.5px;
+    }
+    
+    #img1 {
+        right: 0px;
+        top: 15%;
+    }
+    
+    .img-pata {
+        width: clamp(280px, 32vw, 450px);
+    }
+    
+    /* Reduce visual noise on tablet */
+    #bubble-line1,
+    #bubble-line2,
+    #bubble-line3,
+    #bubble,
+    #bubble1 {
+        opacity: 0.12;
+    }
+    
+    footer::before {
+        min-height: 220px;
+    }
+}
+
+/* Desktop (≥1280px) */
+@media (min-width: 1280px) {
+    .inicio {
+        padding: 80px 120px;
+        justify-content: space-between;
+    }
+    
+    .apresentation {
+        padding: 100px 120px;
+    }
+    
+    .tl1 {
+        margin-bottom: 60px;
+        align-self: flex-start;
+    }
+    
+    .tl2 {
+        margin-bottom: 60px;
+    }
+    
+    .texto1 {
+        max-width: 900px;
+        align-self: flex-start;
+        margin-left: 0;
+    }
+    
+    .texto2 {
+        max-width: 900px;
+    }
+    
+    #img1 {
+        right: 0px;
+        top: 15%;
+    }
+    
+    .img-pata {
+        width: clamp(380px, 25vw, 550px);
+    }
+    
+    /* Better bubble spacing */
+    #bubble-line1,
+    #bubble-line2,
+    #bubble-line3 {
+        right: clamp(20px, 3vw, 50px);
+    }
+    
+    #bubble,
+    #bubble1 {
+        left: clamp(20px, 3vw, 50px);
+    }
+    
+    footer::before {
+        min-height: 240px;
+    }
+}
+
+/* ===================================
+   PERFORMANCE OPTIMIZATIONS
+   =================================== */
+* {
+    will-change: auto;
+}
+
+.fade-in,
+.slide-in-left,
+.slide-in-right,
+.scale-in {
+    will-change: transform, opacity;
+}
+
+/* ===================================
+   ACCESSIBILITY
+   =================================== */
+.texto1:focus,
+.texto2:focus {
+    outline: 2px solid var(--color-highlight);
+    outline-offset: 4px;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .fade-in,
+    .slide-in-left,
+    .slide-in-right,
+    .scale-in {
+        transition: none !important;
+        animation: none !important;
+    }
+    
+    .t1 {
+        animation: none !important;
+    }
+    
+    .img-pata:hover {
+        transform: none !important;
+    }
+}
+
+/* Ensure content visibility */
+.fade-in,
+.slide-in-left,
+.slide-in-right,
+.scale-in {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* ===================================
+   UTILITY CLASSES
+   =================================== */
+.corpo {
     padding-top: 40px;
     padding-inline: 16px;
 }
 
-.t1{
-    text-align: center;
-    color: aliceblue;
+/* Parallax effects */
+.inicio,
+.apresentation {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
-
-p{
-    text-align: justify;
-}
-
-.inicio{
-    position: relative;
-    width: 100%;   
-    height: 1700px;   /* altura fixa da seção */
-    background-color: #302c2f;
-    
-}
-
-.texto1{
-    max-width: 800px;
-    width: 100%;
-    margin: 150px auto 80px 150px;
-    padding: 40px;
-    color: #fff;
-    font-size: 18px;
-    line-height: 1.8;
-    letter-spacing: 0.5px;
-    text-align: justify;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.texto1 p{
-    margin-bottom: 24px;
-    text-indent: 2em;
-    font-weight: 400;
-}
-
-.texto1 p:last-child{
-    margin-bottom: 0;
-}
-
-
-#img1{
-    display: flex;
-    justify-content: flex-end;
-}
-
-#bubble-line1, #bubble-line2, #bubble-line3 {
-    border-radius: 500px;
-}
-
-#bubble-line1{
-    position: absolute;
-    border: 4px solid #ab9586;  /* espessura da borda proporcional */
-    width: 330px;
-    height: 700px;
-    right: 28px;   /* distância da direita fixa */
-    top: -540px;    /* distância do topo fixa */
-}
-
-
-#bubble-line2{
-    position: absolute;
-    border: 4px solid #ab9586;  /* espessura da borda proporcional */
-    width: 330px;
-    height: 550px;
-    right: 28px;   /* distância da direita fixa */
-    top: 480px;    /* distância do topo fixa */
-}
-
-#bubble-line3{
-    position: absolute;
-    width: 330px;
-    height: 550px;
-    right: 28px;   /* distância da direita fixa */
-    top: 890px;    /* distância do topo fixa */
-    background-color: rgba(171, 149, 134, 0.2);  /* preenchimento com #ab9586 e 20% de transparência */
-    border-radius: 500px;
-}
-
-
-
-.apresentation{
-    background-color: #d6c3b6;
-    height: 1500px;  /* altura aumentada para baixo */
-    position: relative;  /* contexto de posicionamento para bubble e bubble1 */
-}
-
-.texto2{
-    max-width: 800px;
-    width: 100%;
-    margin: 150px auto 80px 520px;
-    padding: 40px;
-    color: #302c2f;
-    font-size: 18px;
-    line-height: 1.8;
-    letter-spacing: 0.5px;
-    text-align: justify;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(48, 44, 47, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.texto2 p{
-    margin-bottom: 24px;
-    text-indent: 2em;
-    font-weight: 400;
-}
-
-.texto2 p:last-child{
-    margin-bottom: 0;
-}
-
-#img2{
-    display: flex;
-    justify-content: flex-start;
-}
-
-#bubble{
-    border: 4px solid #ab9586;  /* espessura da borda proporcional */
-    border-radius: 500px;
-    position: absolute;
-    width: 330px;
-    height: 550px;
-    left: 28px;   /* distância da esquerda fixa */
-    top: 400px;    /* distância do topo da seção .apresentation */
-}
-
-#bubble1{
-    background-color: rgba(171, 149, 134, 0.2);  /* preenchimento com #ab9586 e 20% de transparência */
-    border-radius: 500px;
-    position: absolute;
-    width: 330px;
-    height: 550px;
-    left: 28px;   /* distância da esquerda fixa */
-    top: 800px;    /* distância do topo da seção .apresentation */
-}
-
-.img-pata{
-    width: 400px;
-}
-
-footer{
-    position: relative;
-    width: 100%;
-    background: transparent; 
-    min-height: 50vh;
-    padding: 20px 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-footer::before{
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 250px;
-    background: #402918;
-    z-index: 1;
-}
-
-footer .social_icon, footer .menu{
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 10px 0;
-    z-index: 1005;
-}
-
-footer .social_icon li, footer .menu li{
-    list-style: none;
-}
-
-footer .social_icon li a{
-    font-size: 2em;
-    color: #fff;
-    margin: 0 10px;
-    display: inline-block;
-    transition: 0.5s;
-}
-
-footer .social_icon li a:hover{
-    transform: translateY(-10px);
-}
-
-footer .menu li a{
-    font-size: 1.2em;
-    color: #fff;
-    margin: 0 10px;
-    display: inline-block;
-    opacity: 0.75;
-}
-
-footer .menu li a:hover{
-    opacity: 1;
-}
-
-footer p{
-    color: #fff;
-    text-align: center;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    font-size: 1.1em;
-    position: relative;
-    z-index: 1005;
-}
-
-footer .wave{
-    position: absolute;
-    top: 1px;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background: url(../images/waves.png);
-    background-size: 1000px 100px;
-}
-
-footer .wave#wave1{
-    z-index: 1001;
-    opacity: 1;
-    bottom: 0;
-    animation: animateWave 4s linear infinite;
-}
-
-footer .wave#wave2{
-    z-index: 1002;
-    opacity: 0.5;
-    bottom: 10px;
-    animation: animateWave_02 4s linear infinite;
-}
-
-footer .wave#wave3{
-    z-index: 1003;
-    opacity: 0.2;
-    bottom: 15px;
-    animation: animateWave 3s linear infinite;
-}
-
-footer .wave#wave4{
-    z-index: 1004;
-    opacity: 0.7;
-    bottom: 20px;
-    animation: animateWave_02 3s linear infinite;
-}
-
-@keyframes animateWave{
-    0%
-    {
-        background-position-x: 1000px;
-    }
-    100%
-    {
-        background-position: 0px;
-    }
-}
-
-@keyframes animateWave_02{
-    0%
-    {
-        background-position-x: 0px;
-    }
-    100%
-    {
-        background-position: 1000px;
-    }
-}
-
-
-
-
-
-
-/*:root{
-    --color-neutral-0: #0e0c0c;
-    --color-neutral-10: #171717;
-    --color-neutral-30: #a8a29e;
-    --color-neutral-40: #f5f5f5;
-}
-
-footer{
-    width: 100%;
-    color: var(--color-neutral-40);
-}
-
-#footer_content{
-    background-color: var(--color-neutral-10);
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    padding: 3rem 3.5rem;
-}
-
-#footer_contacts h1{
-    margin-bottom: 0.75rem;
-}
-
-#footer_contacts img{
-    max-width: 70px;
-    max-height: 70px;
-}
-
-#footer_social_media{
-    display: flex;
-    gap: 2rem;
-    margin-top: 1.5rem;
-}
-
-#footer_social_media .footer-link{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 2.5rem;
-    width: 2.5rem;
-    color: var(--color-neutral-40);
-    border-radius: 50%;
-    transition: all 0.4s;
-}
-
-#footer_social_media .footer-link i{
-    font-size: 1.25rem;
-}
-
-#footer_social_media .footer-link:hover{
-    opacity: 0.8;
-}
-
-#instagram{
-    background: linear-gradient(#7f37c9, #ff2992, #ff9807);
-    border-radius: 50%;
-}
-
-.footer-list{
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    list-style: none;
-}
-
-.footer-list .footer-link{
-    color: var(--color-neutral-30);
-}
-
-.footer-list .footer-link:hover{
-    color: #7f37c9;
-    transition:all 0.4s;
-}
-
-#footer_copyright{
-    display: flex;
-    justify-content: center;
-    background-color: var(--color-neutral-0);
-    font-size: 0.9rem;
-    padding: 1.5rem;
-    font-weight: 100;
-} */
