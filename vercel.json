@@ -2,18 +2,8 @@
   "version": 2,
   "name": "blog-pata",
   "builds": [
-    {
-      "src": "html/index.html",
-      "use": "@vercel/static"
-    }
+    { "src": "index.html", "use": "@vercel/static" }
   ],
-"rewrites": [
-  { "source": "/", "destination": "/html/home.html" },
-  { "source": "/index.html", "destination": "/html/home.html" },
-  { "source": "/style/(.*)", "destination": "/style/$1" },
-  { "source": "/javascript/(.*)", "destination": "/javascript/$1" },
-  { "source": "/images/(.*)", "destination": "/images/$1" }
-],
   "headers": [
     {
       "source": "/(.*)",
